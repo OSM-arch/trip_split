@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+      <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+      <script id="tailwind-config">
+          tailwind.config = {
+              darkMode: "class",
+              theme: {
+                  extend: {
+                      colors: {
+                          "primary": "#3B82F6",
+                          "highlight": "#22C55E",
+                          "background-light": "#F3F4F6",
+                          "background-dark": "#111827",
+                          "text-light": "#1F2937",
+                          "text-dark": "#F9FAFB",
+                          "border-light": "#d0d9e7",
+                          "border-dark": "#334155",
+                          "placeholder-light": "#4d6a99",
+                          "placeholder-dark": "#94a3b8"
+                      },
+                      fontFamily: {
+                          "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+                      },
+                      borderRadius: {
+                          "DEFAULT": "0.5rem",
+                          "lg": "0.75rem",
+                          "xl": "1rem",
+                          "full": "9999px"
+                      },
+                  },
+              },
+          }
+      </script>
+
+    <title>convoiture_local</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
