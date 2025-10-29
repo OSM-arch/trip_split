@@ -39,7 +39,7 @@ export default function SignUp() {
         if (user.user !== null) {
             naviget('/');
         }
-    }, [naviget, user.user]);
+    }, []);
 
     // ===============================
     // 🔹 Methods

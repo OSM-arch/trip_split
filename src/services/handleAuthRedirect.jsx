@@ -17,7 +17,6 @@ export default function HandleAuthRedirect() {
 
         handleAuthCallback().then(async ({data, error}) => {
             if (error) {
-                console.error("Error getting session:", error.message);
                 setMessage('Something went wrong while signing you in. Please try again.');
                 return;
             }

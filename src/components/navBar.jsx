@@ -1,4 +1,4 @@
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {userSelector} from "@/store/selectors/userSelector.js";
@@ -12,16 +12,24 @@ export default function NavBar() {
 
     const headerRef = useRef(null);
 
-    window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        const scrollPercentage = Math.ceil(scrollY * 100 / (document.body.scrollHeight - window.innerHeight));
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const scrollPercentage = Math.ceil(scrollY * 100 / (document.body.scrollHeight - window.innerHeight));
 
-        if (scrollPercentage >= 30) {
-            headerRef.current.classList.add('hidden');
-        }else {
-            headerRef.current.classList.remove('hidden');
+            if (scrollPercentage >= 30) {
+                headerRef.current.classList.add('hidden');
+            }else {
+                headerRef.current.classList.remove('hidden');
+            }
         }
-    });
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
 
     const handleLogout = () => {
         const is_error = logout();

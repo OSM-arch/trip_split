@@ -36,7 +36,7 @@ export default function Login() {
         if (user.user !== null) {
             naviget('/');
         }
-    }, [naviget, user.user]);
+    }, []);
 
     // ===============================
     // 🔹 Methods
