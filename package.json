@@ -1,6 +1,6 @@
 {
-  "name": "convoiture_local",
-  "homepage": "",
+  "name": "tripsplitt",
+  "homepage": "https://tripsplitt.netlify.app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
