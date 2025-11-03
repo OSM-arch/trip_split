@@ -3,7 +3,8 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {userSelector} from "@/store/selectors/userSelector.js";
 import {logout} from "@/services/logout.js";
-import {clearUser} from "@/store/features/userSlice.js";
+import {clearAll} from "@/store/features/userSlice.js";
+import {persistor} from "@/store/store.js";
 
 export default function NavBar() {
 
@@ -31,11 +32,12 @@ export default function NavBar() {
         };
     }, []);
 
-    const handleLogout = () => {
-        const is_error = logout();
+    const handleLogout = async () => {
+        const is_error = await logout();
 
         if (!is_error) {
-            dispatch(clearUser());
+            dispatch(clearAll());
+            await persistor.purge();
         }
     }
 
@@ -43,11 +45,11 @@ export default function NavBar() {
         <header className="fixed z-10 w-full" ref={headerRef}>
             <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
                 <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
+                    <Link to="/" className="-m-1.5 p-1.5">
+                        <span className="sr-only">TripSplit</span>
                         <img src="/navLogo.png" alt=""
                              className="h-8 w-auto transform scale-[3] sm:scale-[3] md:scale-[4] lg:scale-[5]"/>
-                    </a>
+                    </Link>
                 </div>
                 <div className="flex lg:hidden">
                     <button type="button" command="show-modal" commandfor="mobile-menu"
@@ -64,8 +66,8 @@ export default function NavBar() {
                 {/* Appear only if the user is login */}
                 {
                     user.user === null ? <div className="hidden lg:flex lg:gap-x-12"></div> : <el-popover-group className="hidden lg:flex lg:gap-x-12">
-                        <a href="#" className="text-sm/6 font-semibold text-white">Services</a>
-                        <a href="#" className="text-sm/6 font-semibold text-white">Features</a>
+                        <a href="#Community" className="text-sm/6 font-semibold text-white">Community</a>
+                        <a href="#works" className="text-sm/6 font-semibold text-white">How It Works</a>
                         <a href="#" className="text-sm/6 font-semibold text-white">Marketplace</a>
                         <Link to="/user_dashboard" className="text-sm/6 font-semibold text-white">Dashboard</Link>
                     </el-popover-group>

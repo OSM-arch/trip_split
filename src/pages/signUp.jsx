@@ -37,7 +37,7 @@ export default function SignUp() {
     useEffect(() => {
         setIsSuccess(false);
         if (user.user !== null) {
-            naviget('/');
+            naviget('/user_dashboard');
         }
     }, []);
 

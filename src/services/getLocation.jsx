@@ -20,7 +20,11 @@ export default function GetLocation() {
                     );
                     const data = await response.json();
 
-                    dispatch(setAddress(data));
+                    dispatch(setAddress({
+                        latitude: latitude,
+                        longitude: longitude,
+                        ...data
+                    }));
                 } catch (err) {
                     console.log("Failed to fetch location details: ", err);
                 }

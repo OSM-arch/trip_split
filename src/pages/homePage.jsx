@@ -45,7 +45,7 @@ export default function HomePage() {
                     </div>
                 </div>
                 {/* <!-- Project Description Section --> */}
-                <div className="bg-white dark:bg-background-dark/50 py-16 sm:py-20">
+                <div id="Community" className="bg-white dark:bg-background-dark/50 py-16 sm:py-20">
                     <div className="mx-auto max-w-4xl px-4 text-center">
                         <h2 className="text-3xl font-extrabold tracking-tight text-text-light dark:text-text-dark sm:text-4xl">
                             Your Community Carpooling Solution
@@ -58,7 +58,7 @@ export default function HomePage() {
                     </div>
                 </div>
                 {/* <!-- How It Works Section --> */}
-                <div className="flex flex-col gap-10 px-4 py-16 @container sm:py-24">
+                <div id="works" className="flex flex-col gap-10 px-4 py-16 @container sm:py-24">
                     <div className="flex flex-col gap-4 text-center">
                         <h1 className="text-text-light dark:text-text-dark tracking-tight text-3xl font-bold leading-tight @[480px]:text-4xl @[480px]:font-extrabold max-w-2xl mx-auto">
                             How It Works

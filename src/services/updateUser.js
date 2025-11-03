@@ -3,19 +3,15 @@ import { supabase } from "@/services/supabaseClient.js";
 export default async function updateUser(dataArray, id) {
     let error = null;
 
-    for (const data of dataArray) {
-        const key = Object.keys(data)[0];
+    const { error: updateError } = await supabase
+        .from("users")
+        .update(dataArray)
+        .eq("id", id);
 
-        const { error: updateError } = await supabase
-            .from("users")
-            .update({ [key]: data[key] })
-            .eq("id", id);
-
-        if (updateError) {
-            error = updateError;
-            break;
-        }
+    if (updateError) {
+        error = updateError;
+        return error;
     }
 
-    return error;
+    return null;
 }

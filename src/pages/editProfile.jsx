@@ -12,14 +12,17 @@ export default function EditProfile({setIsOpen}) {
 
     const [error, setError] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [profilePreview, setProfilePreview] = useState(null);
     const [preview, setPreview] = useState(null);
     const [carImage, setCarImage] = useState(null);
+    const [profileImage, setProfileImage] = useState(null);
 
     const fullnameRef = useRef(null);
     const genderRef = useRef(null);
     const organizationRef = useRef(null);
     const modelRef = useRef(null);
     const carImageRef = useRef(null);
+    const profileImageRef = useRef(null);
     const plateRef = useRef(null);
     const seatsRef = useRef(null);
 
@@ -40,6 +43,7 @@ export default function EditProfile({setIsOpen}) {
         const gender = genderRef.current.value;
         const organization = organizationRef.current.value;
         const model = modelRef.current.value.trim();
+        const profile = profileImage;
         const image = carImage;
         let url = "";
         const plate = plateRef.current.value;
@@ -52,19 +56,33 @@ export default function EditProfile({setIsOpen}) {
             return;
         }
 
-        if (gender.length > 0 && organization.length > 0) {
-            inError = await updateUser([{gender: gender}, {organization: organization}], user.user.id);
-
-            if (inError?.length > 0) {
+        if (profileImage) {
+            const {data: imageUrl, error: uploadError} = await uploadImage(profile, 'profile_photos');
+            if (uploadError) {
                 setError([""].map(() => {
-                    return <div key={0} id="0"><AlertField index={0} setState={setError} description="Could not save your changes. Please check your connection and try again." /></div>
+                    return <div key={0} id="0"><AlertField index={0} setState={setError} description="Failed to upload the profile image. Please try again." /></div>
                 }));
                 return;
             }
+
+            url = imageUrl.publicUrl;
+
+            if (gender.length > 0 || organization.length > 0 || url.length > 0) {
+                inError = await updateUser([{gender: gender, organization: organization, photo_url: url}], user.user.id);
+
+                if (inError?.length > 0) {
+                    setError([""].map(() => {
+                        return <div key={0} id="0"><AlertField index={0} setState={setError} description="Could not save your changes. Please check your connection and try again." /></div>
+                    }));
+                    return;
+                }
+            }
         }
 
+
+
         if (image) {
-            const {data: imageUrl, error: uploadError} = await uploadImage(image);
+            const {data: imageUrl, error: uploadError} = await uploadImage(image, 'car_photos');
             if (uploadError) {
                 setError([""].map(() => {
                     return <div key={0} id="0"><AlertField index={0} setState={setError} description="Failed to upload the image. Please try again." /></div>
@@ -73,30 +91,40 @@ export default function EditProfile({setIsOpen}) {
             }
 
             url = imageUrl.publicUrl;
-        }
 
-        if (model.length > 0 || plate.length > 0 || seats.length > 0 || url.length > 0) {
-            inError = await insertCar([{
-                model: model,
-                license_plate: plate,
-                seats: seats,
-                photo_url: url,
-                user_id: user.user.id
-            }], user.user.id);
+            if (model.length > 0 || plate.length > 0 || seats.length > 0 || url.length > 0) {
+                inError = await insertCar([{
+                    model: model,
+                    license_plate: plate,
+                    seats: seats,
+                    photo_url: url,
+                    user_id: user.user.id
+                }], user.user.id);
 
-            if (inError) {
-                setError([""].map(() => {
-                    return <div key={0} id="0"><AlertField index={0} setState={setError} description="Could not save your changes. Please check your connection and try again." /></div>
-                }));
-                return;
+                if (inError) {
+                    setError([""].map(() => {
+                        return <div key={0} id="0"><AlertField index={0} setState={setError} description="Could not save your changes. Please check your connection and try again." /></div>
+                    }));
+                    return;
+                }
             }
         }
-        
+
         setIsSuccess(true);
 
     }
 
-    const handleChange = () => {
+    const handleProfileImageChange =  () => {
+        const image = profileImageRef.current.files[0];
+
+        if (image) {
+            const imageUrl = URL.createObjectURL(image);
+            setProfilePreview(imageUrl);
+            setProfileImage(image);
+        }
+    }
+
+    const handleCarImageChange = () => {
         const image = carImageRef.current.files[0];
 
         if (image) {
@@ -146,7 +174,7 @@ export default function EditProfile({setIsOpen}) {
                                         <div className="mt-2">
                                             <input
                                                 className="form-input block w-full rounded-lg border-border-light dark:border-border-dark bg-gray-100 dark:bg-slate-700/50 py-3 px-4 text-neutral-text-light dark:text-neutral-text-dark shadow-sm cursor-not-allowed text-sm"
-                                                disabled="" id="email" name="email" type="email"
+                                                disabled={true} id="email" name="email" type="email"
                                                 defaultValue={user.userData?.email}/>
                                         </div>
                                     </div>
@@ -157,6 +185,7 @@ export default function EditProfile({setIsOpen}) {
                                         <div className="mt-2">
                                             <select
                                                 ref={genderRef}
+                                                defaultValue={user.userData?.gender}
                                                 className="form-select block w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark py-3 px-4 shadow-sm focus:border-primary focus:ring-primary text-sm"
                                                 id="gender" name="gender">
                                                 <option value="">Prefer not to say</option>
@@ -175,6 +204,34 @@ export default function EditProfile({setIsOpen}) {
                                                 className="form-input block w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark py-3 px-4 shadow-sm focus:border-primary focus:ring-primary text-sm"
                                                 id="organization" name="organization" type="text"
                                                 defaultValue={user.userData?.organization}/>
+                                        </div>
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <label
+                                            className="block text-sm font-medium text-body-text-light dark:text-body-text-dark"
+                                            htmlFor="profile-image">Profile Image</label>
+                                        <div className="mt-2 flex items-center gap-x-4">
+                                            <div
+                                                className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark">
+                                                <img
+                                                    alt="Profile preview"
+                                                    className="h-full w-full object-cover"
+                                                    src={
+                                                        profilePreview
+                                                            ? profilePreview
+                                                            : user.userData?.photo_url
+                                                                ? user.userData.photo_url
+                                                                : "/defaultUser.png"
+                                                    }
+                                                />
+                                            </div>
+                                            <label
+                                                className="relative cursor-pointer rounded-lg font-semibold text-primary hover:text-primary/90"
+                                                htmlFor="profile-image-upload">
+                                                <span>Upload Profile Image</span>
+                                                <input onChange={handleProfileImageChange} ref={profileImageRef} className="sr-only" id="profile-image-upload" name="profile-image-upload"
+                                                       type="file"/>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -218,7 +275,7 @@ export default function EditProfile({setIsOpen}) {
                                                 className="relative cursor-pointer rounded-lg font-semibold text-primary hover:text-primary/90"
                                                 htmlFor="car-image-upload">
                                                 <span>Upload Car Image</span>
-                                                <input onChange={handleChange} ref={carImageRef} className="sr-only" id="car-image-upload" name="car-image-upload"
+                                                <input onChange={handleCarImageChange} ref={carImageRef} className="sr-only" id="car-image-upload" name="car-image-upload"
                                                        type="file"/>
                                             </label>
                                         </div>
