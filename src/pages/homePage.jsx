@@ -10,20 +10,20 @@ export default function HomePage() {
     return (
         <>
             <NavBar />
-            <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+            <div className="relative flex h-auto min-h-screen w-full lg:px-14 lg:mt-2 flex-col group/design-root overflow-x-hidden">
                 {/* !--Hero Section -- */}
-                <div className="bg-cover bg-center min-h-screen w-full h-96"
+                <div className="bg-cover bg-center min-h-screen w-full h-96 rounded flex flex-col justify-center items-start lg:px-5"
                      style={{ backgroundImage: `url('/homePage.jpg')` }}>
                     <div
-                        className="flex flex-col mt-20 gap-8 px-4 py-16 @[480px]:gap-12 @[864px]:flex-row @[864px]:items-center @[864px]:py-24">
+                        className="flex flex-col gap-8 px-4 @[480px]:gap-12 @[864px]:flex-row @[864px]:items-center @[864px]:py-24">
                         <div className="flex flex-col gap-6 @[480px]:gap-8 @[864px]:w-1/2 @[864px]:justify-center">
-                            <div className="flex flex-col gap-4 text-left">
-                                <h1 className="text-text-light dark:text-text-dark text-4xl font-extrabold leading-tight tracking-tight @[480px]:text-5xl @[864px]:text-6xl">
-                                    Share the Ride, Split the Cost
+                            <div className="flex flex-col gap-4 text-center lg:text-left">
+                                <h1 className="text-text-light dark:text-text-dark text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight @[480px]:text-5xl @[864px]:text-6xl">
+                                    Share the Ride, Split <span className="lg:block lg:pt-2">the Cost</span>
                                 </h1>
-                                <h2 className="text-text-light/80 dark:text-text-dark/80 text-lg font-normal leading-normal @[480px]:text-xl">
+                                <h2 className="text-text-light/80 dark:text-text-dark/80 text-lg font-normal leading-normal @[480px]:text-xl lg:text-xl/6">
                                     Connect with members of your community to share rides, save money, reduce your
-                                    carbon footprint, and build a stronger community.
+                                    <span className="lg:block"> carbon footprint, and build a stronger community.</span>
                                 </h2>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -107,7 +107,7 @@ export default function HomePage() {
                     </div>
                 </div>
                 {/* <!-- CTA Section --> */}
-                <div className="@container bg-primary/5 dark:bg-primary/10">
+                <div id="joinus" className="@container bg-primary/5 dark:bg-primary/10">
                     <div
                         className="flex flex-col items-center gap-6 px-4 py-16 text-center @[480px]:gap-8 @[480px]:px-10 @[480px]:py-20">
                         <div className="flex flex-col gap-4">

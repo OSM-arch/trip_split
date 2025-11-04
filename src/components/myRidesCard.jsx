@@ -1,4 +1,14 @@
+import {useEffect, useRef, useState} from "react";
+import deleteTripDriver from "@/services/deleteTripDriver.js";
+
 export default function MyRidesCard({ trip }) {
+
+    if (trip.status === "canceled") {
+        return (
+            <></>
+        )
+    }
+
     const departureDate = new Date(trip.departure_time).toLocaleString("en-GB", {
         weekday: "short",
         day: "numeric",
@@ -6,9 +16,60 @@ export default function MyRidesCard({ trip }) {
         hour: "2-digit",
         minute: "2-digit",
     });
+    
+    const deleteRef = useRef(null);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        const now = new Date();
+        const departure_time = new Date(trip.departure_time);
+
+        const diffInDays = (departure_time - now) / (1000 * 60 * 60 * 24);
+
+        if (diffInDays <= 1) {
+            if (deleteRef.current) {
+                deleteRef.current.disabled = true;
+                deleteRef.current.classList.add("cursor-not-allowed", "opacity-50");
+            }
+        }else {
+            deleteRef.current.disabled = false;
+            deleteRef.current.classList.remove("cursor-not-allowed", "opacity-50");
+            deleteRef.current.classList.add("cursor-pointer");
+        }
+    }, [trip, trip.departure_time, deleteRef]);
+    
+    useEffect(() => {
+        let timeOutId = "";
+        if (error) {
+            timeOutId = setTimeout(() => setError(false), 1500);
+        }
+        return clearTimeout(timeOutId);
+    }, [error])
+
+    const handleDelete = async () => {
+        setError(false);
+        const {error: deleteError} = await deleteTripDriver(trip.id, 'canceled');
+
+        if (deleteError) {
+            console.log('Error: deleting trip ', deleteError.message);
+            setError(true);
+            return;
+        }
+
+        window.location.reload();
+    }
 
     return (
         <div className="p-4">
+
+            {
+                error && <div
+                    className="fixed bottom-6 right-6 flex items-center bg-green-500 text-white text-sm font-bold px-4 py-3 rounded-lg shadow-lg z-20">
+                    <span className="material-symbols-outlined mr-2">cancel</span>
+                    <p>Failed to delete the trip. Please try again later.</p>
+                </div>
+            }
+
             <div className="flex flex-col gap-4 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg p-5 shadow-lg hover:shadow-xl transition-all duration-300">
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -71,14 +132,10 @@ export default function MyRidesCard({ trip }) {
                 )*/}
 
                 {/* Actions */}
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex justify-end pt-2">
                     <button
-                        className="flex items-center justify-center gap-1 rounded-lg bg-blue-500/90 hover:bg-blue-600 text-white px-4 py-2 text-sm font-medium transition-all duration-200"
-                    >
-                        <span className="material-symbols-outlined text-sm">edit</span>
-                        Edit
-                    </button>
-                    <button
+                        ref={deleteRef}
+                        onClick={handleDelete}
                         className="flex items-center justify-center gap-1 rounded-lg bg-red-500/90 hover:bg-red-600 text-white px-4 py-2 text-sm font-medium transition-all duration-200"
                     >
                         <span className="material-symbols-outlined text-sm">delete</span>

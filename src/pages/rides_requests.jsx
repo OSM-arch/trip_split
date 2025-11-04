@@ -91,7 +91,7 @@ function Card({reservation}) {
             return;
         }
 
-        setPassenger(data);
+        setPassenger(data[0]);
     }
     const fetchTrip = async () => {
         const {data, error: fetchError} = await getTripById(reservation.trip_id);
@@ -142,6 +142,7 @@ function Card({reservation}) {
         window.location.reload();
     }
 
+    console.log(passenger);
     return (
         <>
             <div

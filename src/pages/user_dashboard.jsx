@@ -69,7 +69,8 @@ export default function UserDashboard() {
      */
     useEffect(() => {
         const handleFetch = async () => {
-            const { data, error: testError } = await fetchUser(user?.user?.id);
+            if (!user.user?.id) return;
+            const { data, error: testError } = await fetchUser(user.user?.id);
 
             if (testError) {
                 setError([""].map(() => {
@@ -84,11 +85,11 @@ export default function UserDashboard() {
             }
 
             if (data) {
-                dispatch(setUserData(data));
+                dispatch(setUserData(data[0]));
             }
         }
-        handleFetch().then(() => {});
-    }, [dispatch, error?.message, user?.user?.id]);
+        handleFetch();
+    }, [dispatch, error?.message, user.user?.id]);
 
     const handleLogout = async () => {
         const is_error = await logout();
