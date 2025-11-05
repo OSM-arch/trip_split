@@ -126,6 +126,7 @@ export default function Login() {
                                 <span
                                     className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-light/50 dark:text-text-dark/50">lock</span>
                                 <input
+                                    autoComplete="off"
                                     ref={passwordRef}
                                     className="w-full rounded-lg border-none bg-white dark:bg-background-dark/50 py-4 pl-12 pr-12 placeholder:text-text-light/50 dark:placeholder:text-text-dark/50 focus:ring-2 focus:ring-primary"
                                     id="password" placeholder="Enter your password" type="password"/>

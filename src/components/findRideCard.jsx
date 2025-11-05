@@ -1,12 +1,14 @@
-import {useState} from "react";
 import tripPosted from "@/utils/tripPosted.js";
 import insertReservation from "@/services/insertReservation.js";
 import {useSelector} from "react-redux";
 import {userSelector} from "@/store/selectors/userSelector.js";
+import updateAvailableSeats from "@/services/updateAvailableSeats.js";
+import {useEffect, useRef, useState} from "react";
 
 export default function FindRideCard({trip, driver, setState}) {
 
     const user = useSelector(userSelector);
+    const bookButtonRef = useRef(null);
 
     const departureDate = new Date(trip.departure_time).toLocaleString("en-GB", {
         weekday: "short",
@@ -16,6 +18,13 @@ export default function FindRideCard({trip, driver, setState}) {
         minute: "2-digit",
     });
 
+    useEffect(() => {
+        if (trip.available_seats === 0) {
+            bookButtonRef.current.disabled = true;
+            bookButtonRef.current.classList.add('cursor-not-allowed', 'opacity-50');
+        }
+    }, [trip.available_seats]);
+
     const [isSuccess, setIsSuccess] = useState(null);
 
     const handleSubmit = async () => {
@@ -23,6 +32,13 @@ export default function FindRideCard({trip, driver, setState}) {
 
         if (insertResError) {
             console.log("Error Inserting Reservation: ", insertResError.message);
+            setIsSuccess(false);
+            return;
+        }
+
+        const {error: updateSeatsError} = await updateAvailableSeats(trip.id, trip.available_seats-1);
+        if (updateSeatsError) {
+            console.log("Error Inserting Reservation: ", updateSeatsError.message);
             setIsSuccess(false);
             return;
         }
@@ -61,7 +77,7 @@ export default function FindRideCard({trip, driver, setState}) {
                     </div>
                 </div>
                 <div className="text-end text-sm text-gray-60 dark:text-gray-400">{tripPosted(trip.created_at)}</div>
-                <button onClick={handleSubmit} className="w-full bg-primary text-white font-bold py-3 rounded-lg mt-2">Book Seat
+                <button onClick={handleSubmit} ref={bookButtonRef} className="w-full bg-primary text-white font-bold py-3 rounded-lg mt-2">Book Seat
                 </button>
             </div>
         </>

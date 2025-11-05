@@ -3,12 +3,6 @@ import deleteTripDriver from "@/services/deleteTripDriver.js";
 
 export default function MyRidesCard({ trip }) {
 
-    if (trip.status === "canceled") {
-        return (
-            <></>
-        )
-    }
-
     const departureDate = new Date(trip.departure_time).toLocaleString("en-GB", {
         weekday: "short",
         day: "numeric",
@@ -48,7 +42,7 @@ export default function MyRidesCard({ trip }) {
 
     const handleDelete = async () => {
         setError(false);
-        const {error: deleteError} = await deleteTripDriver(trip.id, 'canceled');
+        const {error: deleteError} = await deleteTripDriver(trip.id);
 
         if (deleteError) {
             console.log('Error: deleting trip ', deleteError.message);

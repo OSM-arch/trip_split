@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import FindRideCard from "@/components/findRideCard.jsx";
 import getRides from "@/services/getRides.js";
@@ -9,6 +9,7 @@ import getBookedTrips from "@/services/getBookedTrips.js";
 
 export default function FindRide() {
 
+    const naviget = useNavigate();
     const user = useSelector(userSelector);
 
     const [loading, setLoading] = useState(true);
@@ -18,6 +19,11 @@ export default function FindRide() {
     const [filteredTrips, setFilteredTrips] = useState([]);
     const [search, setSearch] = useState("");
 
+    useEffect(() => {
+        if (user.user === null) {
+            naviget('/');
+        }
+    }, [naviget, user.user]);
     useEffect(() => {
         fetchRides();
     }, []);

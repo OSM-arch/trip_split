@@ -115,12 +115,11 @@ export default function OfferRide() {
                 })
             }
         }
-    };
+    }
+
     const handleSubmit = async () => {
 
         const res = validateFormTrip(start, end, dateRef.current.value, availableSeatsRef.current.value, priceRef.current.value)
-        setError(null);
-        setIsSuccess(false);
 
         /*
           Handle Form Error
@@ -131,6 +130,19 @@ export default function OfferRide() {
             setError(res.map(msg => {
                 i = i+1;
                 return <div key={i} id={i}><AlertField index={i} setState={setError} description={msg} /></div>
+            }));
+            return;
+        }
+
+        setError(null);
+        setIsSuccess(false);
+
+        const now = new Date();
+        const dateForm = new Date(dateRef.current.value);
+
+        if (dateForm < now) {
+            setError([].map(() => {
+                return <div key={0} id="0"><AlertField index={0} setState={setError} description="The selected date is in the past. Please choose a future date." /></div>
             }));
             return;
         }
@@ -199,6 +211,7 @@ export default function OfferRide() {
                         <p className="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">From</p>
                         <div className="flex w-full flex-1 items-stretch rounded-lg">
                             <input
+                                autoComplete="off"
                                 type="text"
                                 id="start"
                                 value={startQuery}
@@ -224,6 +237,7 @@ export default function OfferRide() {
                         <p className="text-text-light dark:text-text-dark text-base font-medium leading-normal pb-2">To</p>
                         <div className="flex w-full flex-1 items-stretch rounded-lg">
                             <input
+                                autoComplete="off"
                                 type="text"
                                 id="end"
                                 value={endQuery}
